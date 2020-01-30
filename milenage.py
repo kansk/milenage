@@ -179,7 +179,7 @@ def PrintMilenageOutput(attribs):
     return
 
 def PrintCSV(attribs):
-    with open('/home/simtrustadmin/milenage-master/sample.csv', 'w') as file_writer:
+    with open('D:\\sample.csv', 'wb') as file_writer:
         fields = ['Res', 'IK', 'CK']
         writer = csv.DictWriter(file_writer, fieldnames=fields)
         writer.writeheader()
