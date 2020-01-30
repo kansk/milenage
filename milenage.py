@@ -12,6 +12,7 @@
 
 import sys, os
 import binascii
+import csv
 from   Crypto.Cipher import AES
 from   itertools import izip
 
@@ -159,38 +160,54 @@ def ReadMilenageInput(filename):
 
 def PrintMilenageOutput(attribs):
     '''Prints input read'''
+
     idx = 1
     for keyset in attribs:
-       print 'Keyset # %d'%(idx)
-       print '  %2s: %s'%('ki', keyset['ki']) 
-       print '  %2s: %s'%('op', keyset['op']) 
-       print '  Auth Triplets: '
-       print '    %4s: %s'%('rand', keyset['rand']) 
-       print '    %4s: %s'%('sres', keyset['sres']) 
-       print '    %4s: %s'%('kc',   keyset['kc'])
-       print '    %4s: %s'%('res',   keyset['res'])
-       print '    %4s: %s'%('ik',   keyset['ik'])
-       print '    %4s: %s'%('ck',   keyset['ck'])
-       print '  '
-       idx += 1 
+        print 'Keyset # %d' % idx
+        print '  %2s: %s' % ('ki', keyset['ki'])
+        print '  %2s: %s' % ('op', keyset['op'])
+        print '  Auth Triplets: '
+        print '    %4s: %s' % ('rand', keyset['rand'])
+        print '    %4s: %s' % ('sres', keyset['sres'])
+        print '    %4s: %s' % ('kc', keyset['kc'])
+        print '    %4s: %s' % ('res', keyset['res'])
+        print '    %4s: %s' % ('ik', keyset['ik'])
+        print '    %4s: %s' % ('ck', keyset['ck'])
+        print '  '
+        
+        idx += 1
     return
-    
+
+def PrintCSV(attribs):
+    with open('/home/simtrustadmin/milenage-master/sample.csv', 'w') as file_writer:
+        fields = ['Res', 'IK', 'CK']
+        writer = csv.DictWriter(file_writer, fieldnames=fields)
+        writer.writeheader()
+        for keyset in attribs:
+            writer.writerow({'Res': keyset['res'], 'IK': keyset['ik'],
+                            'CK': keyset['ck']})
+    return
 
 def main():
     '''The main function'''
-    if len(sys.argv) < 2:
-       print 'Milenage: Please provide input file'
-       return
 
-    #Read input
+    if len(sys.argv) < 2:
+        print 'Milenage: Please provide input file'
+        return
+
+    # Read input
+
     attribs = ReadMilenageInput(sys.argv[1])
 
-    #Generate auth triplets now
+    # Generate auth triplets now
+
     for keyset in attribs:
         GenerateAuthTriplets(keyset)
 
-    #Print output
+    # Print output
+
     PrintMilenageOutput(attribs)
+    PrintCSV(attribs)
     return
 
 
