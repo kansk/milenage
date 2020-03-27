@@ -30,7 +30,7 @@ def AESEncrypt(key, buf):
     '''Encrypt buffer using AES-SHA1 128 algorithm
        @key: Key to be used for encryption
        @buf: Buffer to be encrypted'''
-    encryptor = AES.new(key, AES.MODE_CBC, os.urandom(16))
+    encryptor = AES.new(key, AES.MODE_ECB)
     return encryptor.encrypt(buf)
 
 
